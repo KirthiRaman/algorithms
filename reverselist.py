@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 def reverseString(s):
         if not s:
            return
