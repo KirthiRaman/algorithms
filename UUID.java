@@ -77,7 +77,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public final class UUID
 extends Object
-implements Serializable, Comparable&lt;UUID&gt;
+implements Serializable, Comparable<UUID>
 {
 	private static final long serialVersionUID = -4856846361193249489L;
 
@@ -117,8 +117,8 @@ implements Serializable, Comparable&lt;UUID&gt;
 	public int clockSequence()
 	{
 		if( version() != 1 )
-			throw new UnsupportedOperationException(&quot;Not a type 1 UUID&quot;);
-		return (int)((leastSigBits &amp; 0x3FFF000000000000L) &gt;&gt; 48);
+			throw new UnsupportedOperationException("Not a type 1 UUID");
+		return (int)((leastSigBits & 0x3FFF000000000000L) >> 48);
 	}
 
 	/**
@@ -129,13 +129,13 @@ implements Serializable, Comparable&lt;UUID&gt;
 	 */
 	public int compareTo(UUID o)
 	{
-		if( mostSigBits &lt; o.mostSigBits )
+		if( mostSigBits < o.mostSigBits )
 			return -1;
-		if( mostSigBits &gt; o.mostSigBits )
+		if( mostSigBits > o.mostSigBits )
 			return 1;
-		if( leastSigBits &lt; o.leastSigBits )
+		if( leastSigBits < o.leastSigBits )
 			return -1;
-		if( leastSigBits &gt; o.mostSigBits )
+		if( leastSigBits > o.mostSigBits )
 			return 1;
 		return 0;
 	}
@@ -147,7 +147,7 @@ implements Serializable, Comparable&lt;UUID&gt;
 	{
 		if( !(obj instanceof UUID ) )
 			return false;
-		return ( ((UUID)obj).mostSigBits == mostSigBits &amp;&amp;
+		return ( ((UUID)obj).mostSigBits == mostSigBits &&
 		((UUID)obj).leastSigBits == leastSigBits
 	}
 
@@ -161,16 +161,16 @@ implements Serializable, Comparable&lt;UUID&gt;
 	 */
 	public static UUID fromString(String name)
 	{
-		StringTokenizer st = new StringTokenizer( name.trim(), &quot;-&quot; );
-		if( st.countTokens() &lt; 5 )
-			throw new IllegalArgumentException( &quot;Incorrect UUID string&quot;+
-			&quot; representation:&quot;+name );
+		StringTokenizer st = new StringTokenizer( name.trim(), "-" );
+		if( st.countTokens() < 5 )
+			throw new IllegalArgumentException( "Incorrect UUID string"+
+			" representation:"+name );
 
-		long msb = (Long.parseLong(st.nextToken(), 16) &lt;&lt; 32); // time low
-		msb |= (Long.parseLong(st.nextToken(), 16) &lt;&lt; 16); // time mid
+		long msb = (Long.parseLong(st.nextToken(), 16) << 32); // time low
+		msb |= (Long.parseLong(st.nextToken(), 16) << 16); // time mid
 		msb |= Long.parseLong(st.nextToken(), 16); // time high
 
-		long lsb = (Long.parseLong(st.nextToken(), 16) &lt;&lt; 48); // clock
+		long lsb = (Long.parseLong(st.nextToken(), 16) << 48); // clock
 		lsb |= Long.parseLong(st.nextToken(), 16); // node
 
 		return new UUID(msb, lsb);
@@ -181,10 +181,10 @@ implements Serializable, Comparable&lt;UUID&gt;
 	 *
 	 * The format of the standard string representation (given in RFC4122) is:
 	 *
-	 * time-low &quot;-&quot; time-mid &quot;-&quot;
-	 * time-high-and-version &quot;-&quot;
+	 * time-low "-" time-mid "-"
+	 * time-high-and-version "-"
 	 * clock-seq-and-reserved
-	 * clock-seq-low &quot;-&quot; node
+	 * clock-seq-low "-" node
 	 *
 	 * Where each field is represented as a hex string.
 	 *
@@ -193,19 +193,19 @@ implements Serializable, Comparable&lt;UUID&gt;
 	public String toString()
 	{
 		return // time-low first
-				padHex( (( mostSigBits &amp; 0xFFFFFFFF00000000L) &gt;&gt; 32) &amp; 0xFFFFFFFFL, 8)
-				+ &quot;-&quot; + // then time-mid
-				padHex( (( mostSigBits &amp; 0xFFFF0000L ) &gt;&gt; 16), 4 )
-				+ &quot;-&quot; + // time-high
-				padHex( ( mostSigBits &amp; 0x0000000000000000FFFFL ), 4 )
-				+ &quot;-&quot; + // clock (note - no reason to separate high and low here)
-				padHex( (((leastSigBits &amp; 0xFFFF000000000000L) &gt;&gt; 48) &amp; 0xFFFF), 4 )
-				+ &quot;-&quot; + // finally the node value.
-				padHex(leastSigBits &amp; 0xFFFFFFFFFFFFL, 12);
+				padHex( (( mostSigBits & 0xFFFFFFFF00000000L) >> 32) & 0xFFFFFFFFL, 8)
+				+ "-" + // then time-mid
+				padHex( (( mostSigBits & 0xFFFF0000L ) >> 16), 4 )
+				+ "-" + // time-high
+				padHex( ( mostSigBits & 0x0000000000000000FFFFL ), 4 )
+				+ "-" + // clock (note - no reason to separate high and low here)
+				padHex( (((leastSigBits & 0xFFFF000000000000L) >> 48) & 0xFFFF), 4 )
+				+ "-" + // finally the node value.
+				padHex(leastSigBits & 0xFFFFFFFFFFFFL, 12);
 	}
 
 	/**
-	 * Returns the least significant 64 bits of the UUID as a &lt;code&gt;long&lt;/code&gt;.
+	 * Returns the least significant 64 bits of the UUID as a <code>long</code>.
 	 */
 	public long getLeastSignificantBits()
 	{
@@ -213,7 +213,7 @@ implements Serializable, Comparable&lt;UUID&gt;
 	}
 
 	/**
-	 * Returns the most significant 64 bits of the UUID as a &lt;code&gt;long&lt;/code&gt;.
+	 * Returns the most significant 64 bits of the UUID as a <code>long</code>.
 	 */
 	public long getMostSignificantBits()
 	{
@@ -225,10 +225,10 @@ implements Serializable, Comparable&lt;UUID&gt;
 	 */
 	public int hashCode()
 	{
-		int l1 = (int)(leastSigBits &amp; 0xFFFFFFFFL);
-		int l2 = (int)((leastSigBits &amp; 0xFFFFFFFF00000000L) &gt;&gt; 32);
-		int m1 = (int)(mostSigBits &amp; 0xFFFFFFFFL);
-		int m2 = (int)((mostSigBits &amp; 0xFFFFFFFF00000000L) &gt;&gt; 32);
+		int l1 = (int)(leastSigBits & 0xFFFFFFFFL);
+		int l2 = (int)((leastSigBits & 0xFFFFFFFF00000000L) >> 32);
+		int m1 = (int)(mostSigBits & 0xFFFFFFFFL);
+		int m2 = (int)((mostSigBits & 0xFFFFFFFF00000000L) >> 32);
 
 		return (l1 ^ l2) ^ (m1 ^ m2);
 	}
@@ -244,28 +244,28 @@ implements Serializable, Comparable&lt;UUID&gt;
 
 		try
 		{
-			MessageDigest md5 = MessageDigest.getInstance(&quot;MD5&quot;);
+			MessageDigest md5 = MessageDigest.getInstance("MD5");
 			hash = md5.digest( name );
 		}
 		catch (NoSuchAlgorithmException e)
 		{
-			throw new UnsupportedOperationException(&quot;No MD5 algorithm available.&quot;);
+			throw new UnsupportedOperationException("No MD5 algorithm available.");
 		}
 
-		msb = ((hash[0] &amp; 0xFFL) &lt;&lt; 56) | ((hash[1] &amp; 0xFFL) &lt;&lt; 48) |
-				((hash[2] &amp; 0xFFL) &lt;&lt; 40) | ((hash[3] &amp; 0xFFL) &lt;&lt; 32
-				((hash[4] &amp; 0xFFL) &lt;&lt; 24) | ((hash[5] &amp; 0xFFL) &lt;&lt; 16
-				((hash[6] &amp; 0xFFL) &lt;&lt; 8) | (hash[7] &amp; 0xFFL
+		msb = ((hash[0] & 0xFFL) << 56) | ((hash[1] & 0xFFL) << 48) |
+				((hash[2] & 0xFFL) << 40) | ((hash[3] & 0xFFL) << 32
+				((hash[4] & 0xFFL) << 24) | ((hash[5] & 0xFFL) << 16
+				((hash[6] & 0xFFL) << 8) | (hash[7] & 0xFFL
 
-				lsb = ((hash[8] &amp; 0xFFL) &lt;&lt; 56) | ((hash[9] &amp; 0xFFL) &lt;&lt; 48) |
-				((hash[10] &amp; 0xFFL) &lt;&lt; 40) | ((hash[11] &amp; 0xFFL) &lt;&lt; 32
-				((hash[12] &amp; 0xFFL) &lt;&lt; 24) | ((hash[13] &amp; 0xFFL) &lt;&lt; 16
-				((hash[14] &amp; 0xFFL) &lt;&lt; 8) | (hash[15] &amp; 0xFFL
+				lsb = ((hash[8] & 0xFFL) << 56) | ((hash[9] & 0xFFL) << 48) |
+				((hash[10] & 0xFFL) << 40) | ((hash[11] & 0xFFL) << 32
+				((hash[12] & 0xFFL) << 24) | ((hash[13] & 0xFFL) << 16
+				((hash[14] & 0xFFL) << 8) | (hash[15] & 0xFFL
 
-				lsb &amp;= 0x3FFFFFFFFFFFFFFFL;
+				lsb &= 0x3FFFFFFFFFFFFFFFL;
 				lsb |= 0x8000000000000000L; // set top two bits to variant 2
 
-				msb &amp;= 0xFFFFFFFFFFFF0FFFL;
+				msb &= 0xFFFFFFFFFFFF0FFFL;
 				msb |= 0x3000; // Version 3; 
 
 				return new UUID(msb, lsb);
@@ -281,8 +281,8 @@ implements Serializable, Comparable&lt;UUID&gt;
 	public long node()
 	{
 		if( version() != 1 )
-			throw new UnsupportedOperationException(&quot;Not a type 1 UUID&quot;);
-		return (leastSigBits &amp; 0xFFFFFFFFFFFFL);
+			throw new UnsupportedOperationException("Not a type 1 UUID");
+		return (leastSigBits & 0xFFFFFFFFFFFFL);
 	}
 
 	/**
@@ -295,11 +295,11 @@ implements Serializable, Comparable&lt;UUID&gt;
 	public long timestamp()
 	{
 		if( version() != 1 )
-			throw new UnsupportedOperationException(&quot;Not a type 1 UUID&quot;);
-		long time = (( mostSigBits &amp; 0xFFFFFFFF00000000L) &gt;&gt; 32);
-		time |= (( mostSigBits &amp; 0xFFFF0000L ) &lt;&lt; 16);
-		long time_hi = ( mostSigBits &amp; 0xFFFL );
-		time |= (time_hi &lt;&lt; 48);
+			throw new UnsupportedOperationException("Not a type 1 UUID");
+		long time = (( mostSigBits & 0xFFFFFFFF00000000L) >> 32);
+		time |= (( mostSigBits & 0xFFFF0000L ) << 16);
+		long time_hi = ( mostSigBits & 0xFFFL );
+		time |= (time_hi << 48);
 		return time;
 	}
 
@@ -313,10 +313,10 @@ implements Serializable, Comparable&lt;UUID&gt;
 		long lsb = r.nextLong();
 		long msb = r.nextLong();
 
-		lsb &amp;= 0x3FFFFFFFFFFFFFFFL;
+		lsb &= 0x3FFFFFFFFFFFFFFFL;
 		lsb |= 0x8000000000000000L; // set top two bits to variant 2
 
-		msb &amp;= 0xFFFFFFFFFFFF0FFFL;
+		msb &= 0xFFFFFFFFFFFF0FFFL;
 		msb |= 0x4000; // Version 4; 
 
 		return new UUID( msb, lsb );
@@ -328,8 +328,8 @@ implements Serializable, Comparable&lt;UUID&gt;
 	private String padHex( long l, int n )
 	{
 		String s = Long.toHexString( l );
-		while( s.length() &lt; n )
-			s = &quot;0&quot; + s;
+		while( s.length() < n )
+			s = "0" + s;
 			return s;
 	}
 
@@ -345,10 +345,10 @@ implements Serializable, Comparable&lt;UUID&gt;
 	public int variant()
 	{
 		// Get the top 3 bits (not all may be part of the variant)
-		int v = (int)((leastSigBits &amp; 0xE000000000000000L) &gt;&gt; 61);
-		if( (v &amp; 0x04) == 0 ) // msb of the variant is 0
+		int v = (int)((leastSigBits & 0xE000000000000000L) >> 61);
+		if( (v & 0x04) == 0 ) // msb of the variant is 0
 			return 0;
-		if( (v &amp; 0x02) == 0 ) // variant is 0 1 (Leach-Salz)
+		if( (v & 0x02) == 0 ) // variant is 0 1 (Leach-Salz)
 			return 2;
 		return v; // 6 or 7 
 	}
@@ -367,5 +367,5 @@ implements Serializable, Comparable&lt;UUID&gt;
 	 */
 	public int version()
 	{
-		return (int)((mostSigBits &amp; 0xF000L) &gt;&gt; 12);
+		return (int)((mostSigBits & 0xF000L) >> 12);
 	}
